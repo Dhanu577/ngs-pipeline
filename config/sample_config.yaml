@@ -1,0 +1,16 @@
+# NGS Pipeline Configuration
+
+# Input/Output
+fastq_input: "data/sample.fastq.gz"
+reference_genome: "data/reference.fasta"
+output_dir: "./results"
+
+# Parameters
+threads: 4
+align_tool: "bwa"
+variant_caller: "samtools"
+min_depth: 10
+
+# QC parameters
+fastqc_enabled: true
+skip_qc: false
