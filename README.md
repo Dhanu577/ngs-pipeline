@@ -63,3 +63,39 @@ Danuska - Bioinformatics Student, Tamil Nadu, India
 ## License
 
 MIT
+
+---
+
+## 🐳 Docker
+
+### Build Image
+
+```bash
+docker build -t ngs-pipeline:latest .
+```
+
+### Run with Docker
+
+```bash
+docker run -v $(pwd)/data:/app/data -v $(pwd)/results:/app/results ngs-pipeline:latest \
+  run --config /app/config/sample_config.yaml --output /app/results/docker_run
+```
+
+### Run with Docker Compose
+
+```bash
+docker-compose up
+```
+
+This will:
+- Build the image
+- Mount your data and results directories
+- Run the pipeline in a container
+- Keep all output in `./results`
+
+### Verify Docker Works
+
+```bash
+docker build -t ngs-pipeline .
+docker run ngs-pipeline run --help
+```
