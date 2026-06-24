@@ -8,10 +8,9 @@ import subprocess
 import threading
 import yaml
 
-app = Flask(__name__, template_folder='templates')
-app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 500MB max upload
+app = Flask(__name__, template_folder='templates', static_folder='static')
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
 
-# Job tracking
 JOBS = {}
 UPLOAD_FOLDER = Path('./uploads')
 RESULTS_FOLDER = Path('./web_results')
@@ -21,7 +20,7 @@ RESULTS_FOLDER.mkdir(exist_ok=True)
 class PipelineJob:
     def __init__(self, job_id):
         self.job_id = job_id
-        self.status = 'pending'  # pending, running, completed, failed
+        self.status = 'pending'
         self.progress = 0
         self.output_dir = RESULTS_FOLDER / job_id
         self.config = {}
@@ -49,10 +48,8 @@ def run_pipeline_job(job_id, fastq_file, reference_file, config):
     job.progress = 10
     
     try:
-        # Prepare output directory
         job.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Copy files to job directory
         import shutil
         job_fastq = job.output_dir / Path(fastq_file).name
         job_ref = job.output_dir / Path(reference_file).name
@@ -61,19 +58,16 @@ def run_pipeline_job(job_id, fastq_file, reference_file, config):
         
         job.progress = 20
         
-        # Update config with paths
         config['fastq_input'] = str(job_fastq)
         config['reference_genome'] = str(job_ref)
         config['output_dir'] = str(job.output_dir)
         
-        # Write config file
         config_file = job.output_dir / 'pipeline_config.yaml'
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
         
         job.progress = 30
         
-        # Run pipeline
         cmd = ['ngs-pipeline', 'run', '--config', str(config_file), '--output', str(job.output_dir)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
         
@@ -99,16 +93,13 @@ def run_pipeline_job(job_id, fastq_file, reference_file, config):
 
 @app.route('/')
 def index():
-    """Home page"""
     return render_template('index.html')
 
 @app.route('/api/job', methods=['POST'])
 def create_job():
-    """Create a new pipeline job"""
     try:
         job_id = str(uuid.uuid4())[:8]
         
-        # Get uploaded files
         if 'fastq' not in request.files or 'reference' not in request.files:
             return jsonify({'error': 'Missing files'}), 400
         
@@ -118,27 +109,23 @@ def create_job():
         if fastq_file.filename == '' or reference_file.filename == '':
             return jsonify({'error': 'Empty files'}), 400
         
-        # Save uploads
         fastq_path = UPLOAD_FOLDER / f"{job_id}_{fastq_file.filename}"
         ref_path = UPLOAD_FOLDER / f"{job_id}_{reference_file.filename}"
         fastq_file.save(fastq_path)
         reference_file.save(ref_path)
         
-        # Get config
         config = {
             'threads': int(request.form.get('threads', 4)),
             'enable_annotation': request.form.get('enable_annotation') == 'true',
             'fastqc_enabled': True,
         }
         
-        # Create job
         job = PipelineJob(job_id)
         job.config = config
         JOBS[job_id] = job
         
-        # Run pipeline in background
-        thread = threading.Thread(target=run_pipeline_job
-thread.daemon = True
+        thread = threading.Thread(target=run_pipeline_job, args=(job_id, str(fastq_path), str(ref_path), config))
+        thread.daemon = True
         thread.start()
         
         return jsonify({'job_id': job_id}), 201
@@ -148,7 +135,6 @@ thread.daemon = True
 
 @app.route('/api/job/<job_id>', methods=['GET'])
 def get_job(job_id):
-    """Get job status"""
     if job_id not in JOBS:
         return jsonify({'error': 'Job not found'}), 404
     
@@ -157,13 +143,11 @@ def get_job(job_id):
 
 @app.route('/api/jobs', methods=['GET'])
 def list_jobs():
-    """List all jobs"""
-    jobs = [job.to_dict() for job in JOBS.values()]
+    jobs = [job.to_dict() for job in sorted(JOBS.values(), key=lambda j: j.created_at, reverse=True)]
     return jsonify(jobs)
 
 @app.route('/api/job/<job_id>/report', methods=['GET'])
 def get_report(job_id):
-    """Download report"""
     if job_id not in JOBS:
         return jsonify({'error': 'Job not found'}), 404
     
@@ -177,7 +161,6 @@ def get_report(job_id):
 
 @app.route('/api/job/<job_id>/download', methods=['GET'])
 def download_results(job_id):
-    """Download all results as ZIP"""
     if job_id not in JOBS:
         return jsonify({'error': 'Job not found'}), 404
     
@@ -186,7 +169,6 @@ def download_results(job_id):
     if not job.output_dir.exists():
         return jsonify({'error': 'Results not found'}), 404
     
-    # Create ZIP file
     import zipfile
     zip_path = RESULTS_FOLDER / f"{job_id}_results.zip"
     
@@ -199,12 +181,10 @@ def download_results(job_id):
 
 @app.route('/jobs')
 def jobs_page():
-    """Jobs page"""
     return render_template('jobs.html')
 
 @app.route('/submit')
 def submit_page():
-    """Submit job page"""
     return render_template('submit.html')
 
 @app.errorhandler(404)

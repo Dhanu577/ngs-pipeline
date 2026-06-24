@@ -3,34 +3,93 @@
 {% block title %}Home - NGS Pipeline{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Welcome to NGS Pipeline</h2>
-    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
-        A production-grade bioinformatics pipeline for Next-Generation Sequencing data analysis.
-    </p>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
-        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 10px;">
-            <h3>🚀 Quick Start</h3>
-            <p>Upload your FASTQ and reference genome files to get started.</p>
-            <a href="/submit" class="btn btn-success" style="margin-top: 1rem;">Submit New Job</a>
+<div class="hero">
+    <h1>NGS Data Analysis Platform</h1>
+    <p>Professional-grade bioinformatics pipeline for next-generation sequencing</p>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="feature-box">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast & Efficient</h3>
+            <p>Optimized pipeline for quick analysis</p>
+            <a href="/submit" class="btn btn-primary btn-small">Get Started</a>
         </div>
         
-        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 10px;">
-            <h3>📊 View Results</h3>
-            <p>Check the status and results of your analysis jobs.</p>
-            <a href="/jobs" class="btn" style="margin-top: 1rem;">View Jobs</a>
+        <div class="feature-box">
+            <div class="feature-icon">🔬</div>
+            <h3>Scientific Grade</h3>
+            <p>Production-grade bioinformatics tools</p>
+        </div>
+        
+        <div class="feature-box">
+            <div class="feature-icon">📊</div>
+            <h3>Detailed Reports</h3>
+            <p>Comprehensive analysis reports</p>
         </div>
     </div>
     
-    <h3 style="margin-top: 2rem;">Pipeline Stages</h3>
-    <ol style="line-height: 2; margin-left: 2rem;">
-        <li><strong>Quality Control</strong> - FastQC analysis of input reads</li>
-        <li><strong>Reference Indexing</strong> - Prepare reference genome for alignment</li>
-        <li><strong>Read Alignment</strong> - Map reads to reference using BWA-MEM</li>
-        <li><strong>Variant Calling</strong> - Call variants using SAMtools/BCFtools</li>
-        <li><strong>Annotation</strong> - Annotate variants (optional)</li>
-        <li><strong>Report Generation</strong> - Create comprehensive HTML report</li>
-    </ol>
+    <div class="card">
+        <h2>How It Works</h2>
+        <div class="grid" style="margin-top: 2rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">1️⃣</div>
+                <h4>Upload Files</h4>
+                <p>Submit your FASTQ and reference genome</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">2️⃣</div>
+                <h4>Configure</h4>
+                <p>Set analysis parameters</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">3️⃣</div>
+                <h4>Analyze</h4>
+                <p>Pipeline runs automatically</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">4️⃣</div>
+                <h4>Results</h4>
+                <p>Get detailed reports & data</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Pipeline Stages</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Quality Control</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">FastQC analysis</p>
+            </div>
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Alignment</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">BWA-MEM mapping</p>
+            </div>
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Variant Calling</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">SAMtools/BCFtools</p>
+            </div>
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Annotation</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">SnpEff integration</p>
+            </div>
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Reporting</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">HTML reports</p>
+            </div>
+            <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="margin: 0 0 0.5rem 0;">Downloads</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #718096;">Results in ZIP</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin: 3rem 0;">
+        <a href="/submit" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;">
+            🚀 Start Analysis Now
+        </a>
+    </div>
 </div>
 {% endblock %}
