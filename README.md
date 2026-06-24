@@ -58,7 +58,7 @@ threads: 4
 
 ## Author
 
-Danuska - Bioinformatics Student, Tamil Nadu, India
+Dhanuska - Bioinformatics Student, Tamil Nadu, India
 
 ## License
 
